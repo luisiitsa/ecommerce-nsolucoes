@@ -76,4 +76,13 @@ Route::middleware(['auth'])->group(function () {
         }
         return abort(403);
     });
+
+    Route::delete('/users/{id}', function ($id) {
+        if (auth()->user()->is_admin) {
+            $user = User::findOrFail($id);
+            $user->delete();
+            return redirect('admin/users');
+        }
+        return abort(403);
+    });
 });

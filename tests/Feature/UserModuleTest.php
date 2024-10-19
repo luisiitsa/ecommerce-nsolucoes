@@ -67,4 +67,17 @@ class UserModuleTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'updated@example.com']);
         $response->assertRedirect('admin/users');
     }
+
+    public function test_admin_can_soft_delete_user()
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $user = User::factory()->create();
+
+        $this->actingAs($admin);
+
+        $response = $this->delete("/admin/users/{$user->id}");
+
+        $this->assertSoftDeleted('users', ['id' => $user->id]);
+        $response->assertRedirect('/admin/users');
+    }
 }
