@@ -11,14 +11,14 @@ Route::get('/', function () {
         return view('admin.home');
     }
     return redirect('admin/login');
-});
+})->name('admin.home');
 
 Route::get('/login', function () {
     if (Auth::check()) {
         return redirect('admin/');
     }
     return view('admin.login');
-})->name('login');
+});
 
 Route::post('/login', function (Request $request) {
     $credentials = $request->validate([
@@ -53,14 +53,14 @@ Route::middleware(['auth'])->group(function () {
             return view('admin.users.index', compact('users'));
         }
         return abort(403);
-    });
+    })->name('admin.users.index');
 
     Route::get('/users/create', function () {
         if (auth()->user()->isAdmin()) {
             return view('admin.users.create');
         }
         return abort(403);
-    });
+    })->name('admin.users.create');
 
     Route::post('/users', function (Request $request) {
         if (auth()->user()->isAdmin()) {
@@ -81,7 +81,7 @@ Route::middleware(['auth'])->group(function () {
             return redirect('/admin/users');
         }
         return abort(403);
-    });
+    })->name('admin.users.store');
 
     Route::get('/users/{id}/edit', function ($id) {
         if (auth()->user()->is_admin) {
@@ -89,7 +89,7 @@ Route::middleware(['auth'])->group(function () {
             return view('admin.users.edit', compact('user'));
         }
         return abort(403);
-    });
+    })->name('admin.users.edit');
 
     Route::put('/users/{id}', function (Request $request, $id) {
         if (auth()->user()->is_admin) {
@@ -112,7 +112,7 @@ Route::middleware(['auth'])->group(function () {
             return redirect('/admin/users');
         }
         return abort(403);
-    });
+    })->name('admin.users.update');
 
     Route::delete('/users/{id}', function ($id) {
         if (auth()->user()->is_admin) {
@@ -121,5 +121,7 @@ Route::middleware(['auth'])->group(function () {
             return redirect('admin/users');
         }
         return abort(403);
-    });
+    })->name('admin.users.destroy');
+
+    Route::get('/products')->name('admin.products.index');
 });

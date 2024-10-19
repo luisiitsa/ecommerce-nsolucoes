@@ -67,7 +67,14 @@ class LoginTest extends TestCase
             'password' => 'wrongpassword',
         ]);
 
-        $response->assertStatus(401);
+        $response->assertStatus(302);
+
+        $response->assertRedirect('/');
+
+        $response->assertSessionHasErrors([
+            'credenciais' => 'Credenciais inválidas.',
+        ]);
+
         $this->assertGuest();
     }
 

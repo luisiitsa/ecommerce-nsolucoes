@@ -17,7 +17,7 @@
             <h3 class="card-title text-center mb-4">Login</h3>
 
             <!-- Formulário de Login -->
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="/admin/login">
                 @csrf
 
                 <!-- Campo de Usuário -->
