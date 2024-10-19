@@ -49,4 +49,22 @@ class UserModuleTest extends TestCase
 
         $response->assertRedirect('/admin/users');
     }
+
+    public function test_admin_can_edit_user()
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $user = User::factory()->create();
+
+        $updatedUserData = [
+            'name' => 'Updated User',
+            'email' => 'updated@example.com',
+        ];
+
+        $this->actingAs($admin);
+
+        $response = $this->put("admin/users/{$user->id}", $updatedUserData);
+
+        $this->assertDatabaseHas('users', ['email' => 'updated@example.com']);
+        $response->assertRedirect('admin/users');
+    }
 }

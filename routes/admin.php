@@ -45,4 +45,35 @@ Route::middleware(['auth'])->group(function () {
         }
         return abort(403);
     });
+
+    Route::get('/users/{id}/edit', function ($id) {
+        if (auth()->user()->is_admin) {
+            $user = User::findOrFail($id);
+            return view('users.edit', compact('user'));
+        }
+        return abort(403);
+    });
+
+    Route::put('/users/{id}', function (Request $request, $id) {
+        if (auth()->user()->is_admin) {
+            $user = User::findOrFail($id);
+
+            $request->validate([
+                'name' => 'string|max:255',
+                'cpf' => 'digits:11|unique:users,cpf,'.$user->id,
+                'email' => 'string|email|max:255|unique:users,email,' . $user->id,
+                'password' => 'string|min:8|confirmed',
+            ]);
+
+            $user->update([
+                'name' => $request->name,
+                'cpf' => $request->cpf,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            return redirect('/admin/users');
+        }
+        return abort(403);
+    });
 });
