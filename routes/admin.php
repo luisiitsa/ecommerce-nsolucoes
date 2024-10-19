@@ -2,25 +2,62 @@
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return 'admin';
+    if (Auth::check()) {
+        return view('admin.home');
+    }
+    return redirect('admin/login');
+});
+
+Route::get('/login', function () {
+    if (Auth::check()) {
+        return redirect('admin/');
+    }
+    return view('admin.login');
+})->name('login');
+
+Route::post('/login', function (Request $request) {
+    $credentials = $request->validate([
+        'login' => 'required|string',
+        'password' => 'required|string',
+    ]);
+
+    $loginType = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'cpf';
+
+    $user = User::where($loginType, $credentials['login'])->first();
+
+    if ($user && Hash::check($credentials['password'], $user->password)) {
+        Auth::login($user);
+
+        return redirect('admin/');
+    }
+
+    return response()->json([
+        'message' => 'Credenciais inválidas.',
+    ], 401);
+});
+
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('admin/login');
 });
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/users', function () {
         if (auth()->user()->isAdmin()) {
             $users = User::whereNull('deleted_at')->get();
-            return view('users.index', compact('users'));
+            return view('admin.users.index', compact('users'));
         }
         return abort(403);
     });
 
     Route::get('/users/create', function () {
         if (auth()->user()->isAdmin()) {
-            return view('users.create');
+            return view('admin.users.create');
         }
         return abort(403);
     });
@@ -49,7 +86,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/{id}/edit', function ($id) {
         if (auth()->user()->is_admin) {
             $user = User::findOrFail($id);
-            return view('users.edit', compact('user'));
+            return view('admin.users.edit', compact('user'));
         }
         return abort(403);
     });
