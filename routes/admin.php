@@ -36,9 +36,9 @@ Route::post('/login', function (Request $request) {
         return redirect('admin/');
     }
 
-    return response()->json([
-        'message' => 'Credenciais inválidas.',
-    ], 401);
+    return back()->withErrors([
+        'credenciais' => 'Credenciais inválidas.',
+    ])->withInput();
 });
 
 Route::post('/logout', function () {
