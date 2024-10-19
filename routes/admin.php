@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -9,9 +11,37 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/users', function () {
-        if (auth()->user()->is_admin) {
+        if (auth()->user()->isAdmin()) {
             $users = User::whereNull('deleted_at')->get();
             return view('users.index', compact('users'));
+        }
+        return abort(403);
+    });
+
+    Route::get('/users/create', function () {
+        if (auth()->user()->isAdmin()) {
+            return view('users.create');
+        }
+        return abort(403);
+    });
+
+    Route::post('/users', function (Request $request) {
+        if (auth()->user()->isAdmin()) {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'cpf' => 'required|string|digits:11|unique:users,cpf',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+
+            User::create([
+                'name' => $request->name,
+                'cpf' => $request->cpf,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            return redirect('/admin/users');
         }
         return abort(403);
     });

@@ -9,6 +9,8 @@ use Tests\TestCase;
 
 class UserModuleTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_admin_can_see_user_list()
     {
         $admin = User::factory()->create(['is_admin' => true]);
@@ -30,5 +32,21 @@ class UserModuleTest extends TestCase
         $response = $this->get('/admin/users');
 
         $response->assertStatus(403);
+    }
+
+    public function test_admin_can_create_user()
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        $newUserData = User::factory()->make(['email' => 'testuser@example.com'])->toArray()
+            + ['password' => '12345678', 'password_confirmation' => '12345678'];
+
+        $this->actingAs($admin);
+
+        $response = $this->post('/admin/users', $newUserData);
+
+        $this->assertDatabaseHas('users', ['email' => 'testuser@example.com']);
+
+        $response->assertRedirect('/admin/users');
     }
 }
