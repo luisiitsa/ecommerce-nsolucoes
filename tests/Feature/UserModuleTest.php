@@ -80,4 +80,23 @@ class UserModuleTest extends TestCase
         $this->assertSoftDeleted('users', ['id' => $user->id]);
         $response->assertRedirect('/admin/users');
     }
+
+    public function test_non_admin_cannot_access_any_crud_actions()
+    {
+        $user = User::factory()->create(['is_admin' => false]);
+
+        $this->actingAs($user);
+
+        $response = $this->get('/admin/users');
+        $response->assertStatus(403);
+
+        $response = $this->post('/admin/users');
+        $response->assertStatus(403);
+
+        $response = $this->put('/admin/users/1');
+        $response->assertStatus(403);
+
+        $response = $this->delete('/admin/users/1');
+        $response->assertStatus(403);
+    }
 }
