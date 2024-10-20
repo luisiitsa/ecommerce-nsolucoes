@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AuthAdmin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,7 @@ Route::get('/login', function () {
         return redirect('admin/');
     }
     return view('admin.login');
-});
+})->name('admin.login');
 
 Route::post('/login', function (Request $request) {
     $credentials = $request->validate([
@@ -46,7 +47,7 @@ Route::post('/logout', function () {
     return redirect('admin/login');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware([AuthAdmin::class])->group(function () {
     Route::get('/users', function (Request $request) {
         if (auth()->user()->isAdmin()) {
             $query = User::query();
