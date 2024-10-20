@@ -14,7 +14,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $product->name }}</h5>
                         <p class="card-text">R$ {{ number_format($product->price, 2, ',', '.') }}</p>
-                        <a href="#" class="btn btn-primary">Ver mais</a>
+                        <a href="{{ route('app.sales.product', $product->id) }}" class="btn btn-primary">Ver mais</a>
                     </div>
                 </div>
             </div>
