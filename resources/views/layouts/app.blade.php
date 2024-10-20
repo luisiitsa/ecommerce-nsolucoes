@@ -29,32 +29,33 @@
                     <a class="nav-link" href="#">Carrinho</a>
                 </li>
 
-                <!-- Verifica se o usuário está logado -->
-                @guest
-                    <!-- Caso o usuário não esteja logado -->
+                <!-- Verifica se o customer está logado -->
+                @guest('customer')
+                    <!-- Caso o customer não esteja logado -->
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
                             <i class="bi bi-person-circle"></i> Logar
                         </a>
                     </li>
                 @else
-                    <!-- Caso o usuário esteja logado -->
+                    <!-- Caso o customer esteja logado -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                        <a class="nav-link dropdown-toggle" href="#" id="customerDropdown" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle"></i> {{ explode(' ', Auth::user()->name)[0] }}
+                            <i class="bi bi-person-circle"></i> {{ explode(' ', Auth::guard('customer')->user()->name)[0] }}
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Editar Perfil</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="customerDropdown">
+                            <li><a class="dropdown-item" href="">Editar Perfil</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                <a class="dropdown-item" href="{{ route('app.customer.logout') }}"
                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     Sair
                                 </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                <form id="logout-form" action="{{ route('app.customer.logout') }}" method="POST"
+                                      class="d-none">
                                     @csrf
                                 </form>
                             </li>
@@ -76,7 +77,7 @@
             </div>
             <div class="modal-body">
                 <!-- Formulário de Login -->
-                <form method="POST" action="">
+                <form method="POST" action="{{ route('app.customer.login') }}">
                     @csrf
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
