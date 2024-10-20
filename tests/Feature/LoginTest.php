@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -87,7 +86,7 @@ class LoginTest extends TestCase
 
         $response = $this->get('admin/');
 
-        //$response->assertSee('Página principal');
+        $response->assertSee('Admin');
     }
 
     /** @test */
