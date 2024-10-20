@@ -45,7 +45,9 @@
                             <i class="bi bi-person-circle"></i> {{ explode(' ', Auth::guard('customer')->user()->name)[0] }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="customerDropdown">
-                            <li><a class="dropdown-item" href="">Editar Perfil</a></li>
+                            <li><a class="dropdown-item" href="{{ route('app.customer.edit', Auth::guard('customer')
+                            ->user()->id) }}">Editar
+                                    Perfil</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

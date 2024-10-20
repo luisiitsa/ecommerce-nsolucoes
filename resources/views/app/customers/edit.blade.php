@@ -1,0 +1,10 @@
+@extends('layouts.app')
+
+@section('content')
+    <form action="/customers/{{ $customer->id }}" method="POST">
+        @csrf
+        @method('PUT')
+        @include('app.customers._form')
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+@endsection
