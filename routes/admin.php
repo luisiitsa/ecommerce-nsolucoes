@@ -47,9 +47,16 @@ Route::post('/logout', function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/users', function () {
+    Route::get('/users', function (Request $request) {
         if (auth()->user()->isAdmin()) {
-            $users = User::whereNull('deleted_at')->get();
+            $query = User::query();
+
+            if ($request->has('name')) {
+                $query->where('name', 'like', '%' . $request->name . '%');
+            }
+
+            $users = $query->paginate(10);
+
             return view('admin.users.index', compact('users'));
         }
         return abort(403);
