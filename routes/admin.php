@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Middleware\AuthAdmin;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -131,5 +133,69 @@ Route::middleware([AuthAdmin::class])->group(function () {
         return abort(403);
     })->name('admin.users.destroy');
 
-    Route::get('/products')->name('admin.products.index');
+    Route::get('/products', function () {
+        $products = Product::all();
+        return view('admin.products.index', compact('products'));
+    })->name('admin.products.index');
+
+    Route::get('/products/create', function () {
+        return view('admin.products.create');
+    })->name('admin.products.create');
+
+    Route::post('/products', function (Request $request) {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'height' => 'required|numeric',
+            'width' => 'required|numeric',
+            'length' => 'required|numeric',
+            'weight' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        Product::create($validated);
+
+        return redirect()->route('admin.products.index');
+    })->name('admin.products.store');
+
+    Route::get('/products/{product}/edit', function (Product $product) {
+        return view('admin.products.edit', compact('product'));
+    })->name('admin.products.edit');
+
+    Route::put('/products/{product}', function (Request $request, Product $product) {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'height' => 'required|numeric',
+            'width' => 'required|numeric',
+            'length' => 'required|numeric',
+            'weight' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $validated['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update($validated);
+
+        return redirect()->route('admin.products.index');
+    })->name('admin.products.update');
+
+    Route::delete('/products/{product}', function (Product $product) {
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+
+        $product->delete();
+
+        return redirect()->route('admin.products.index');
+    })->name('admin.products.destroy');
 });
