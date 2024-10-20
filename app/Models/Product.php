@@ -22,5 +22,6 @@ class Product extends Model
         'width',
         'length',
         'weight',
+        'image',
     ];
 }
