@@ -20,6 +20,9 @@
                 <th>#</th>
                 <th>Nome do Cliente</th>
                 <th>CPF</th>
+                <th>Total</th>
+                <th>Forma de Pagamento</th>
+                <th>Data de Hora da compra</th>
                 <th>Ações</th>
             </tr>
             </thead>
@@ -29,6 +32,9 @@
                     <td>{{ $order->id }}</td>
                     <td>{{ $order->customer->name }}</td>
                     <td>{{ $order->customer->cpf }}</td>
+                    <td>{{ $order->total }}</td>
+                    <td>{{ $order->type_payment }}</td>
+                    <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
                     <td>
                         <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-info">Ver Detalhes</a>
                     </td>
