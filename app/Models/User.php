@@ -11,6 +11,8 @@ use Illuminate\Notifications\Notifiable;
 
 /**
  * @property boolean $is_admin
+ * @property mixed $password
+ * @method static where(string $loginType, string $login)
  */
 class User extends Authenticatable
 {

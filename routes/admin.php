@@ -1,6 +1,7 @@
 <?php
 
 use App\Exports\OrdersExport;
+use App\Http\Controllers\AuthController;
 use App\Http\Middleware\AuthAdmin;
 use App\Models\Order;
 use App\Models\Product;
@@ -32,38 +33,9 @@ Route::get('/', function (Request $request) {
 })->name('admin.home');
 
 
-Route::get('/login', function () {
-    if (Auth::check()) {
-        return redirect('admin/');
-    }
-    return view('admin.login');
-})->name('admin.login');
-
-Route::post('/login', function (Request $request) {
-    $credentials = $request->validate([
-        'login' => 'required|string',
-        'password' => 'required|string',
-    ]);
-
-    $loginType = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'cpf';
-
-    $user = User::where($loginType, $credentials['login'])->first();
-
-    if ($user && Hash::check($credentials['password'], $user->password)) {
-        Auth::login($user);
-
-        return redirect('admin/');
-    }
-
-    return back()->withErrors([
-        'credenciais' => 'Credenciais inválidas.',
-    ])->withInput();
-});
-
-Route::post('/logout', function () {
-    Auth::logout();
-    return redirect('admin/login');
-});
+Route::get('/login', [AuthController::class, 'loginForm'])->name('admin.login');
+Route::post('/login', [AuthController::class, 'login'])->name('admin.login.submit');
+Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
 Route::middleware([AuthAdmin::class])->group(function () {
     Route::get('/users', function (Request $request) {
