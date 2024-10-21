@@ -119,6 +119,28 @@ Route::post('/cart/add', function (Request $request) {
     return redirect()->back()->with('success', 'Produto adicionado ao carrinho!');
 })->name('app.cart.add');
 
+Route::post('/cart/sale', function (Request $request) {
+    $cart = session()->get('cart', []);
+
+    $productId = $request->input('product_id');
+    $productName = $request->input('product_name');
+    $productPrice = $request->input('product_price');
+
+    if (isset($cart[$productId])) {
+        $cart[$productId]['quantity']++;
+    } else {
+        $cart[$productId] = [
+            'name' => $productName,
+            'price' => $productPrice,
+            'quantity' => 1
+        ];
+    }
+
+    session()->put('cart', $cart);
+
+    return redirect(route('app.cart'))->with('success', '');
+})->name('app.cart.sale');
+
 Route::post('/cart/remove', function (Request $request) {
     $cart = session()->get('cart', []);
 

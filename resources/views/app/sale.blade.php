@@ -18,7 +18,13 @@
                 </form>
 
                 <!-- Botão para comprar agora (redireciona para página de checkout) -->
-                <button class="btn btn-primary">Comprar agora</button>
+                <form action="{{ route('app.cart.sale') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input type="hidden" name="product_name" value="{{ $product->name }}">
+                    <input type="hidden" name="product_price" value="{{ $product->price }}">
+                    <button class="btn btn-primary">Comprar agora</button>
+                </form>
             </div>
         </div>
     </div>

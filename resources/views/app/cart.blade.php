@@ -29,7 +29,37 @@
             @endforeach
             </tbody>
         </table>
+
+        @guest('customer')
+            <!-- Botão que abre o modal de login se o usuário não estiver logado -->
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#loginModal">
+                Finalizar Compra
+            </button>
+        @else
+            <!-- Botão que abre o modal de finalização de compra se o usuário estiver logado -->
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkoutModal">
+                Finalizar Compra
+            </button>
+        @endguest
     @else
         <p>Seu carrinho está vazio!</p>
     @endif
+
+    <!-- Modal de Finalização de Compra -->
+    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="checkoutModalLabel">Finalizar Compra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Aqui você pode incluir o formulário de finalização da compra -->
+                    <p>Por favor, revise suas informações antes de finalizar a compra.</p>
+                    <!-- Exemplo de um botão para continuar para a finalização -->
+                    <button type="button" class="btn btn-success">Confirmar Compra</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
