@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Customer;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -13,7 +15,12 @@ class OrderTest extends TestCase
     /** @test */
     public function it_displays_orders_list()
     {
+        $user = User::factory()->create();
+        $user = $user->fresh();
+
         $orders = Order::factory()->count(5)->create();
+
+        $this->actingAs($user);
 
         $response = $this->get(route('admin.home'));
 
@@ -26,16 +33,24 @@ class OrderTest extends TestCase
     /** @test */
     public function it_can_filter_orders_by_name_or_cpf()
     {
-        $order1 = Order::factory()->create(['customer_name' => 'João', 'cpf' => '11111111111']);
-        $order2 = Order::factory()->create(['customer_name' => 'Maria', 'cpf' => '22222222222']);
+        $user = User::factory()->create();
+        $user = $user->fresh();
+
+        $this->actingAs($user);
+
+        $customer1 = Customer::factory()->create(['name' => 'João', 'cpf' => '11111111111']);
+        $customer2 = Customer::factory()->create(['name' => 'Maria', 'cpf' => '22222222222']);
+
+        $order1 = Order::factory()->create(['customer_id' => $customer1->id]);
+        $order2 = Order::factory()->create(['customer_id' => $customer2->id]);
 
         $response = $this->get(route('admin.home', ['search' => 'João']));
-        $response->assertSee($order1->customer_name);
-        $response->assertDontSee($order2->customer_name);
+        $response->assertSee($order1->customer->name);
+        $response->assertDontSee($order2->customer->name);
 
         $response = $this->get(route('admin.home', ['search' => '22222222222']));
-        $response->assertSee($order2->cpf);
-        $response->assertDontSee($order1->cpf);
+        $response->assertSee($order2->customer->cpf);
+        $response->assertDontSee($order1->customer->cpf);
     }
 
 
