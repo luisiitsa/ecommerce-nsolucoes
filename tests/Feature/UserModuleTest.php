@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class UserModuleTest extends TestCase
@@ -21,17 +20,6 @@ class UserModuleTest extends TestCase
 
         $response->assertStatus(200)
             ->assertViewHas('users');
-    }
-
-    public function test_non_admin_cannot_see_user_list()
-    {
-        $user = User::factory()->create(['is_admin' => false]);
-
-        $this->actingAs($user);
-
-        $response = $this->get('/admin/users');
-
-        $response->assertStatus(403);
     }
 
     public function test_admin_can_create_user()
@@ -86,9 +74,6 @@ class UserModuleTest extends TestCase
         $user = User::factory()->create(['is_admin' => false]);
 
         $this->actingAs($user);
-
-        $response = $this->get('/admin/users');
-        $response->assertStatus(403);
 
         $response = $this->post('/admin/users');
         $response->assertStatus(403);

@@ -29,7 +29,7 @@ class OrderController extends Controller
     public function index(Request $request
     ): \Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse {
         if (Auth::check()) {
-            $orders = $this->orderService->searchOrders();
+            $orders = $this->orderService->search();
             return view('admin.home', compact('orders'));
         }
 

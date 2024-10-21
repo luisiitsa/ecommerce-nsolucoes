@@ -27,7 +27,7 @@ class OrderService
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator The paginated list of orders with customer details
      */
-    public function searchOrders()
+    public function search(): \Illuminate\Pagination\LengthAwarePaginator
     {
         return $this->orderRepository->with('customer')->paginate();
     }

@@ -18,8 +18,8 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="input-group">
-                        <input type="text" name="name" class="form-control" placeholder="Filtrar por nome"
-                               value="{{ request('name') }}">
+                        <input type="text" name="search" class="form-control" placeholder="Filtrar por nome"
+                               value="{{ request()->input('search') }}">
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="submit">Filtrar</button>
                         </div>

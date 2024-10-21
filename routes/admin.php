@@ -3,13 +3,12 @@
 use App\Exports\OrdersExport;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthAdmin;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -21,88 +20,12 @@ Route::post('/login', [AuthController::class, 'login'])->name('admin.login.submi
 Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
 Route::middleware([AuthAdmin::class])->group(function () {
-    Route::get('/users', function (Request $request) {
-        if (auth()->user()->isAdmin()) {
-            $query = User::query();
-
-            if ($request->has('name')) {
-                $query->where('name', 'like', '%' . $request->name . '%');
-            }
-
-            $users = $query->paginate(10);
-
-            return view('admin.users.index', compact('users'));
-        }
-        return abort(403);
-    })->name('admin.users.index');
-
-    Route::get('/users/create', function () {
-        if (auth()->user()->isAdmin()) {
-            return view('admin.users.create');
-        }
-        return abort(403);
-    })->name('admin.users.create');
-
-    Route::post('/users', function (Request $request) {
-        if (auth()->user()->isAdmin()) {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'cpf' => 'required|string|digits:11|unique:users,cpf',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:8|confirmed',
-            ]);
-
-            User::create([
-                'name' => $request->name,
-                'cpf' => $request->cpf,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
-
-            return redirect('/admin/users');
-        }
-        return abort(403);
-    })->name('admin.users.store');
-
-    Route::get('/users/{id}/edit', function ($id) {
-        if (auth()->user()->is_admin) {
-            $user = User::findOrFail($id);
-            return view('admin.users.edit', compact('user'));
-        }
-        return abort(403);
-    })->name('admin.users.edit');
-
-    Route::put('/users/{id}', function (Request $request, $id) {
-        if (auth()->user()->is_admin) {
-            $user = User::findOrFail($id);
-
-            $request->validate([
-                'name' => 'string|max:255',
-                'cpf' => 'digits:11|unique:users,cpf,'.$user->id,
-                'email' => 'string|email|max:255|unique:users,email,' . $user->id,
-                'password' => 'string|min:8|confirmed',
-            ]);
-
-            $user->update([
-                'name' => $request->name,
-                'cpf' => $request->cpf,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
-
-            return redirect('/admin/users');
-        }
-        return abort(403);
-    })->name('admin.users.update');
-
-    Route::delete('/users/{id}', function ($id) {
-        if (auth()->user()->is_admin) {
-            $user = User::findOrFail($id);
-            $user->delete();
-            return redirect('admin/users');
-        }
-        return abort(403);
-    })->name('admin.users.destroy');
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 
     Route::get('/products', function () {
         $products = Product::all();
