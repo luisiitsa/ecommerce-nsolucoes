@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Customer;
-use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -9,9 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\AppController::class, 'home'])->name('app.home');
 
-Route::get('/sales/{product}', function (Product $product) {
-    return view('app.sale', compact('product'));
-})->name('app.sales.product');
+Route::get('/sales/{product}', [\App\Http\Controllers\SalesController::class, 'show'])->name('app.sales.product');
 
 Route::get('/register', function () {
     return view('app.customers.register');

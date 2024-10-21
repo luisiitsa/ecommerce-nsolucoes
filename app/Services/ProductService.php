@@ -31,6 +31,11 @@ class ProductService
         return $this->productRepository->all();
     }
 
+    public function get($id)
+    {
+        return $this->productRepository->find($id);
+    }
+
     /**
      * Creates a new product and stores its image if provided.
      *
