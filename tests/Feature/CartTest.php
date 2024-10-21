@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CartTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
     public function it_can_add_a_product_to_the_cart()
     {

@@ -3,11 +3,43 @@
 @section('title', 'Admin')
 
 @section('content')
-    <div class="jumbotron">
-        <h1 class="display-4">Welcome to Laravel 11 with Bootstrap!</h1>
-        <p class="lead">This is the home page of your application, styled with Bootstrap 5.</p>
-        <hr class="my-4">
-        <p>Click the button below to learn more about Laravel.</p>
-        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+    <div class="container">
+        <h1>Listagem de Pedidos</h1>
+
+        <form method="GET" action="{{ route('admin.home') }}">
+            <div class="form-group">
+                <input type="text" name="search" class="form-control" placeholder="Buscar por nome ou CPF">
+            </div>
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+
+        <table class="table table-bordered mt-4">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Nome do Cliente</th>
+                <th>CPF</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach ($orders as $order)
+                <tr>
+                    <td>{{ $order->id }}</td>
+                    <td>{{ $order->customer->name }}</td>
+                    <td>{{ $order->customer->cpf }}</td>
+                    <td>
+                        <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-info">Ver Detalhes</a>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+
+        {{ $orders->links() }}
+
+        <a href="{{ route('admin.orders.export', ['format' => 'excel']) }}" class="btn btn-success">Exportar para
+            Excel</a>
+        <a href="{{ route('admin.orders.export', ['format' => 'pdf']) }}" class="btn btn-danger">Exportar para PDF</a>
     </div>
 @endsection

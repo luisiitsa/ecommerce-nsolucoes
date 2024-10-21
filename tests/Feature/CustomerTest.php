@@ -3,15 +3,19 @@
 namespace Tests\Feature;
 
 use App\Models\Customer;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CustomerTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
     public function test_customer_can_be_created()
     {
         $response = $this->post('/customers', [
             'name' => 'John Doe',
+            'cpf' => '12345678900',
             'postal_code' => '12345-678',
             'address' => '123 Main St',
             'number' => '101',
@@ -38,6 +42,7 @@ class CustomerTest extends TestCase
 
         $response = $this->put("/customers/{$customer->id}", [
             'name' => 'Jane Updated',
+            'cpf' => '12345678900',
             'postal_code' => '87654-321',
             'address' => '321 Main St',
             'number' => '202',

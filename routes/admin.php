@@ -1,20 +1,36 @@
 <?php
 
+use App\Exports\OrdersExport;
 use App\Http\Middleware\AuthAdmin;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
     if (Auth::check()) {
-        return view('admin.home');
+        $search = $request->input('search');
+        $orders = Order::query()
+            ->with(['customer'])
+            ->when($search, function ($query, $search) {
+                return $query->whereHas('customer', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('cpf', "{$search}");
+                });
+            })
+            ->paginate(10);
+
+        return view('admin.home', compact('orders'));
     }
     return redirect('admin/login');
 })->name('admin.home');
+
 
 Route::get('/login', function () {
     if (Auth::check()) {
@@ -199,3 +215,20 @@ Route::middleware([AuthAdmin::class])->group(function () {
         return redirect()->route('admin.products.index');
     })->name('admin.products.destroy');
 });
+
+Route::get('/orders/{order}', function (Order $order) {
+    return view('admin.orders.show', compact('order'));
+})->name('admin.orders.show');
+
+Route::get('/orders/export/{format}', function ($format) {
+    $orders = Order::all();
+
+    if ($format === 'excel') {
+        return Excel::download(new OrdersExport, 'orders.xlsx');
+    } elseif ($format === 'pdf') {
+        $pdf = Pdf::loadView('admin.orders.pdf', compact('orders'));
+        return $pdf->download('orders.pdf');
+    }
+
+    return back();
+})->name('admin.orders.export');

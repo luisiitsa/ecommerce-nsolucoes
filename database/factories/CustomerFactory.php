@@ -27,6 +27,7 @@ class CustomerFactory extends Factory
     {
         return [
             'name' => $this->faker->name,
+            'cpf' => fake()->numerify('###########'),
             'postal_code' => $this->faker->postcode,
             'address' => $this->faker->streetName,
             'number' => $this->faker->buildingNumber,
