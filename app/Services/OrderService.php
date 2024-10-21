@@ -61,7 +61,7 @@ class OrderService
      */
     public function exportOrders($format
     ): \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\BinaryFileResponse|false {
-        $orders = Order::all();
+        $orders = Order::with('customer')->get();;
 
         if ($format === 'excel') {
             return Excel::download(new OrdersExport, 'orders.xlsx');

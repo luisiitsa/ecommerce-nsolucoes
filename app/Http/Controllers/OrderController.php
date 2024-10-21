@@ -47,6 +47,7 @@ class OrderController extends Controller
      */
     public function show(Order $order
     ): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application {
+        $order = Order::with(['customer', 'items.product'])->findOrFail($order->id);
         return view('admin.orders.show', compact('order'));
     }
 
