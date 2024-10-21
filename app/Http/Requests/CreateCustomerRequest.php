@@ -23,6 +23,7 @@ class CreateCustomerRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'cpf' => 'required|string|digits:11|unique:users,cpf',
             'postal_code' => 'required|string|max:9',
             'address' => 'required|string|max:255',
             'number' => 'required|string|max:255',
@@ -30,7 +31,7 @@ class CreateCustomerRequest extends FormRequest
             'neighborhood' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:2',
-            'cellphone' => 'required|string|max:15',
+            'cellphone' => 'nullable',
             'email' => 'required|email|unique:customers,email',
             'password' => 'required|string|min:6',
         ];

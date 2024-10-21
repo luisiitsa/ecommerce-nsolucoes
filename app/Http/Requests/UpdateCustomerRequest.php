@@ -23,6 +23,7 @@ class UpdateCustomerRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'cpf' => 'digits:11|unique:users,cpf,' . $this->customer->id,
             'postal_code' => 'required|string|max:9',
             'address' => 'required|string|max:255',
             'number' => 'required|string|max:255',

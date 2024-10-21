@@ -32,7 +32,7 @@
             </tbody>
         </table>
 
-        {{--        @auth('customer')--}}
+        @auth('customer')
         <form id="freteCartForm">
             <div id="cart-data" data-cart="{{ json_encode(session('cart')) }}"></div>
             <div class="form-group">
@@ -65,7 +65,7 @@
                 <!-- O resultado do frete será exibido aqui -->
             </div>
         @endif
-        {{--        @endauth--}}
+        @endauth
 
         @guest('customer')
             <!-- Botão que abre o modal de login se o usuário não estiver logado -->

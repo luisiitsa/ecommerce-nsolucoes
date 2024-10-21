@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Customer;
 use App\Repositories\CustomerRepository;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -11,6 +12,7 @@ use Prettus\Validator\Exceptions\ValidatorException;
 class CustomerService
 {
     protected CustomerRepository $customerRepository;
+    protected Client $httpClient;
 
     /**
      * Constructor for E-commerce NSoluções application.
@@ -20,6 +22,14 @@ class CustomerService
     public function __construct(CustomerRepository $customerRepository)
     {
         $this->customerRepository = $customerRepository;
+        $this->httpClient = new Client([
+            'base_uri' => env('ASAAS_HOST'),
+            'headers' => [
+                'accept' => 'application/json',
+                'content-type' => 'application/json',
+                'access_token' => env('ASAAS_SECRET_ACCESS_KEY'),
+            ],
+        ]);
     }
 
     /**
@@ -33,7 +43,33 @@ class CustomerService
     public function register(array $data): Customer
     {
         $data['password'] = Hash::make($data['password']);
-        return $this->customerRepository->create($data);
+
+        $asaasCustomerData = [
+            'notificationDisabled' => true,
+            'name' => $data['name'],
+            'cpfCnpj' => $data['cpf'],
+            'email' => $data['email'],
+            'mobilePhone' => $data['cellphone'],
+            'address' => $data['address'],
+            'addressNumber' => $data['number'],
+            'complement' => $data['complement'],
+            'province' => $data['neighborhood'],
+            'postalCode' => $data['postal_code'],
+        ];
+
+        try {
+            $response = $this->httpClient->post('/api/v3/customers', [
+                'json' => $asaasCustomerData,
+            ]);
+
+            $asaasResponse = json_decode($response->getBody(), true);
+
+            $data['asaas_id'] = $asaasResponse['id'];
+
+            return $this->customerRepository->create($data);
+        } catch (\Exception $e) {
+            throw new \Exception('Erro ao criar cliente no Asaas: ' . $e->getMessage());
+        }
     }
 
     /**

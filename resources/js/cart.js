@@ -67,10 +67,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Exibe o resultado do frete
             document.getElementById('resultadoFrete').innerHTML = `
-                <div class="alert alert-info">
+                <div class="alert alert-info" xmlns="http://www.w3.org/1999/html">
                     <p><strong>Valor do Produto:</strong> R$ ${total}</p>
-                    <p><strong>Valor do Frete:</strong> R$ ${result.valor}</p>
-                    <p><strong>Total a pagar:</strong> R$ ${totalPay}</p>
+                    <p><strong>Valor do Frete:</strong> R$ <strong id="freightValue">${result.valor}</strong></p>
+                    <p><strong>Total a pagar:</strong> R$ <strong id="payment">${totalPay}</strong></p>
                     <p><strong>Prazo de Entrega:</strong> ${result.prazo} dias</p>
                 </div>
             `;

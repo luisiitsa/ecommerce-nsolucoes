@@ -73,7 +73,7 @@
 </div>
 
 <div class="mb-3">
-    <label for="password" class="form-label">Password</label>
-    <input type="password" name="password" class="form-control" id="password">
+    <label for="passwordCustomer" class="form-label">Password</label>
+    <input type="password" name="password" class="form-control" id="passwordCustomer">
     <div class="invalid-feedback" id="passwordError">Senha é obrigatória.</div>
 </div>
