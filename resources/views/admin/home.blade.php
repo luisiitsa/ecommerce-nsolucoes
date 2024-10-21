@@ -8,7 +8,8 @@
 
         <form method="GET" action="{{ route('admin.home') }}">
             <div class="form-group">
-                <input type="text" name="search" class="form-control" placeholder="Buscar por nome ou CPF">
+                <input type="text" name="search" class="form-control" placeholder="Buscar por nome ou CPF"
+                       value="{{ request()->input('search') }}">
             </div>
             <button type="submit" class="btn btn-primary">Buscar</button>
         </form>

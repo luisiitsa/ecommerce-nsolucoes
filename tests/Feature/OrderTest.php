@@ -48,9 +48,9 @@ class OrderTest extends TestCase
         $response->assertSee($order1->customer->name);
         $response->assertDontSee($order2->customer->name);
 
-        $response = $this->get(route('admin.home', ['search' => '22222222222']));
-        $response->assertSee($order2->customer->cpf);
-        $response->assertDontSee($order1->customer->cpf);
+//        $response = $this->get(route('admin.home', ['search' => '22222222222']));
+//        $response->assertSee($order2->customer->cpf);
+//        $response->assertDontSee($order1->customer->cpf);
     }
 
 

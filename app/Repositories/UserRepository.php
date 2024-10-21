@@ -3,9 +3,26 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use Prettus\Repository\Criteria\RequestCriteria;
+use Prettus\Repository\Eloquent\BaseRepository;
 
-class UserRepository
+class UserRepository extends BaseRepository
 {
+    protected $fieldSearchable = [
+        'name' => 'like',
+        'cpf'
+    ];
+
+    /**
+     * Specify Model class name
+     *
+     * @return string
+     */
+    public function model(): string
+    {
+        return User::class;
+    }
+
     /**
      * Finds a user by their login credentials.
      *
@@ -16,5 +33,13 @@ class UserRepository
     public function findByLogin(string $login, string $loginType): ?User
     {
         return User::where($loginType, $login)->first();
+    }
+
+    /**
+     * Boot up the repository, pushing criteria
+     */
+    public function boot()
+    {
+        $this->pushCriteria(app(RequestCriteria::class));
     }
 }

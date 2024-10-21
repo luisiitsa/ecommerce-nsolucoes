@@ -2,36 +2,19 @@
 
 use App\Exports\OrdersExport;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrderController;
 use App\Http\Middleware\AuthAdmin;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
-Route::get('/', function (Request $request) {
-    if (Auth::check()) {
-        $search = $request->input('search');
-        $orders = Order::query()
-            ->with(['customer'])
-            ->when($search, function ($query, $search) {
-                return $query->whereHas('customer', function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('cpf', "{$search}");
-                });
-            })
-            ->paginate(10);
-
-        return view('admin.home', compact('orders'));
-    }
-    return redirect('admin/login');
-})->name('admin.home');
-
+Route::get('/', [OrderController::class, 'index'])->name('admin.home');
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name('admin.login');
 Route::post('/login', [AuthController::class, 'login'])->name('admin.login.submit');
