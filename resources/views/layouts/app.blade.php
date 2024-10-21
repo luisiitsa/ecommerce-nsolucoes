@@ -26,7 +26,17 @@
                     <a class="nav-link" href="{{ route('app.home') }}">Produtos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Carrinho</a>
+                    <a class="nav-link" href="{{ route('app.cart') }}">
+                        Carrinho
+                        @if(session()->has('cart'))
+                            @php
+                                $cartCount = array_sum(array_column(session('cart'), 'quantity'));
+                            @endphp
+                            @if($cartCount > 0)
+                                <span class="badge badge-pill badge-danger">{{ $cartCount }}</span>
+                            @endif
+                        @endif
+                    </a>
                 </li>
 
                 <!-- Verifica se o customer está logado -->
