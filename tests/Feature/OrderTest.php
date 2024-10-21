@@ -57,6 +57,11 @@ class OrderTest extends TestCase
     /** @test */
     public function it_displays_order_details()
     {
+        $user = User::factory()->create();
+        $user = $user->fresh();
+
+        $this->actingAs($user);
+
         $order = Order::factory()->create();
 
         $response = $this->get(route('admin.orders.show', $order->id));
@@ -69,6 +74,11 @@ class OrderTest extends TestCase
     /** @test */
     public function it_can_export_orders_to_excel()
     {
+        $user = User::factory()->create();
+        $user = $user->fresh();
+
+        $this->actingAs($user);
+
         $orders = Order::factory()->count(5)->create();
 
         $response = $this->get(route('admin.orders.export', ['format' => 'excel']));
@@ -80,6 +90,11 @@ class OrderTest extends TestCase
     /** @test */
     public function it_can_export_orders_to_pdf()
     {
+        $user = User::factory()->create();
+        $user = $user->fresh();
+
+        $this->actingAs($user);
+
         $orders = Order::factory()->count(5)->create();
 
         $response = $this->get(route('admin.orders.export', ['format' => 'pdf']));
