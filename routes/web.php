@@ -7,11 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    $products = Product::all();
-
-    return view('app.home', ['products' => $products]);
-})->name('app.home');
+Route::get('/', [\App\Http\Controllers\AppController::class, 'home'])->name('app.home');
 
 Route::get('/sales/{product}', function (Product $product) {
     return view('app.sale', compact('product'));
