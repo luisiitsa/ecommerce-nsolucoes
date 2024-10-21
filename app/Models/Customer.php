@@ -10,7 +10,9 @@ class Customer extends Authenticatable
     use HasFactory;
 
     protected $fillable = [
+        'asaas_id',
         'name',
+        'cpf',
         'postal_code',
         'address',
         'number',

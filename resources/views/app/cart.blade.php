@@ -91,10 +91,47 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Aqui você pode incluir o formulário de finalização da compra -->
                     <p>Por favor, revise suas informações antes de finalizar a compra.</p>
-                    <!-- Exemplo de um botão para continuar para a finalização -->
-                    <button type="button" class="btn btn-success">Confirmar Compra</button>
+
+                    <!-- Select para escolher a forma de pagamento -->
+                    <div class="mb-3">
+                        <label for="paymentMethod" class="form-label">Forma de Pagamento</label>
+                        <select class="form-select" id="paymentMethod">
+                            <option value="BOLETO">Boleto</option>
+                            <option value="CREDIT_CARD">Cartão de Crédito</option>
+                        </select>
+                    </div>
+
+                    <!-- Campos de Cartão de Crédito (inicialmente escondidos) -->
+                    <div id="creditCardFields" style="display: none;">
+                        <div class="mb-3">
+                            <label for="holderName" class="form-label">Nome no Cartão</label>
+                            <input type="text" class="form-control" id="holderName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="cardNumber" class="form-label">Número do Cartão</label>
+                            <input type="text" class="form-control" id="cardNumber">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="expiryMonth" class="form-label">Mês de Expiração</label>
+                                <input type="text" class="form-control" id="expiryMonth">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="expiryYear" class="form-label">Ano de Expiração</label>
+                                <input type="text" class="form-control" id="expiryYear">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="ccv" class="form-label">CCV</label>
+                                <input type="text" class="form-control" id="ccv">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botão para confirmar a compra -->
+                    <button type="button" class="btn btn-success" id="confirmPurchase" data-bs-dismiss="modal">Confirmar
+                        Compra
+                    </button>
                 </div>
             </div>
         </div>

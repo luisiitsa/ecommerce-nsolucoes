@@ -13,6 +13,7 @@ class Order extends Model
         'customer_id',
         'total',
         'status',
+        'type_payment',
     ];
 
     public function customer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
