@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@vite('resources/js/cart.js')
+
 @section('content')
     <h1>Meu Carrinho</h1>
     @if(session('cart'))
@@ -29,6 +31,41 @@
             @endforeach
             </tbody>
         </table>
+
+        {{--        @auth('customer')--}}
+        <form id="freteCartForm">
+            <div id="cart-data" data-cart="{{ json_encode(session('cart')) }}"></div>
+            <div class="form-group">
+                <label for="cepTo">CEP de Destino</label>
+                <input type="text" class="form-control" id="cepTo" name="cepDestino"
+                       value="{{ old('cepDestino', session('freight.cepTo')) }}"
+                       placeholder="Digite o CEP de destino" required>
+            </div>
+            <div class="form-group">
+                <label for="type">Escolha o tipo de Frete</label>
+                <select class="form-control" id="type" name="tipoFrete" required>
+                    <option value="41106" {{ old('tipoFrete', session('freight.type')) == '41106' ? 'selected' : ''
+                    }}>PAC
+                    </option>
+                    <option value="40010" {{ old('tipoFrete', session('freight.type')) == '40010' ? 'selected' : ''
+                    }}>SEDEX
+                    </option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Calcular Frete</button>
+        </form>
+
+        @if (session('freight'))
+            <div id="resultadoFrete" class="alert alert-info">
+                <p><strong>Valor do Frete:</strong> R$ {{ session('freight.value') }}</p>
+                <p><strong>Prazo de Entrega:</strong> {{ session('freight.time') }} dias</p>
+            </div>
+        @else
+            <div id="resultadoFrete" class="mt-4">
+                <!-- O resultado do frete será exibido aqui -->
+            </div>
+        @endif
+        {{--        @endauth--}}
 
         @guest('customer')
             <!-- Botão que abre o modal de login se o usuário não estiver logado -->

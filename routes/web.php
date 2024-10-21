@@ -103,6 +103,10 @@ Route::post('/cart/add', function (Request $request) {
     $productId = $request->input('product_id');
     $productName = $request->input('product_name');
     $productPrice = $request->input('product_price');
+    $productWeight = $request->input('product_weight');
+    $productLength = $request->input('product_length');
+    $productHeight = $request->input('product_height');
+    $productWidth = $request->input('product_width');
 
     if (isset($cart[$productId])) {
         $cart[$productId]['quantity']++;
@@ -110,6 +114,10 @@ Route::post('/cart/add', function (Request $request) {
         $cart[$productId] = [
             'name' => $productName,
             'price' => $productPrice,
+            'weight' => $productWeight,
+            'length' => $productLength,
+            'height' => $productHeight,
+            'width' => $productWidth,
             'quantity' => 1
         ];
     }
@@ -125,6 +133,10 @@ Route::post('/cart/sale', function (Request $request) {
     $productId = $request->input('product_id');
     $productName = $request->input('product_name');
     $productPrice = $request->input('product_price');
+    $productWeight = $request->input('product_weight');
+    $productLength = $request->input('product_length');
+    $productHeight = $request->input('product_height');
+    $productWidth = $request->input('product_width');
 
     if (isset($cart[$productId])) {
         $cart[$productId]['quantity']++;
@@ -132,6 +144,10 @@ Route::post('/cart/sale', function (Request $request) {
         $cart[$productId] = [
             'name' => $productName,
             'price' => $productPrice,
+            'weight' => $productWeight,
+            'length' => $productLength,
+            'height' => $productHeight,
+            'width' => $productWidth,
             'quantity' => 1
         ];
     }
